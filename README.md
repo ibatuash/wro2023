@@ -44,7 +44,6 @@ Playing fields have lines (usially in black-white-black pattern) which help robo
 
 ![image](https://github.com/ibatuash/wro2023/assets/134078/a95d1319-7aa6-4b3f-803c-05891a23425f)
 
-
 Amount correction changes how fast the number is adjusted. 
 Too large number: large correction angles
 Too small correction: long 'waves' of correction (unpredictable end position) 
