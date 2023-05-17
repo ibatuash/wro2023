@@ -66,6 +66,7 @@ If there are 2 reflection sensors in the build, they can be used to align the ro
 ### Compass (AKA "yaw" gyroscope parameter) 
 Robot hub also has a built-in direction sensor. It is confusingly called "yaw" - but you can think of it as a compass. The parameter value ranges from -180 to +180.  Zero (reference) position needs to be set when the program starts. Then after make turns, you can use the current compass value to adjust rotation: if the compass value is 88 - make an extra 2 degree turn (this logic can be integrated into a custom function such as "turn left" or "turn right". Compass will accumulate error after multiple turns, so it is useful to 'reset' it during the program when robot position is known: for example, after aligning on the line - or intentionally bumping into the wall).
 This program adjusts the robot to be aligned to 0,90,180,270 compass readings:
+
 ![image](https://github.com/ibatuash/wro2023/assets/134078/9b980097-6d66-4b5a-b5b7-ef43d1d3e338)
 
 
