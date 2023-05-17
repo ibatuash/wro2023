@@ -40,7 +40,10 @@ This number changes the central point around which the robot rotates.
 https://www.youtube.com/watch?v=fAr3o0mMvY4
 
 ### Following lines (until some condition)
-Playing fields have lines (usially in black-white-black pattern) which help robot to navigate. The idea of following the line is is to pick a target reflection number (for example 50%) and adjust movement to keep it the same. This number needs to be between black and white reflection numbers - so important to keep lighting the same. Also the reflection number adjusts slightly the target position of the sensor. Then movement is done by adjusting the speed with which the wheels turn, adding corrections based on sensor reading. For this, a Spike command from "Advanced Movement" section is needed (you need to enable it first at the bottom left corner).
+Playing fields have lines (usially in black-white-black pattern) which help robot to navigate. The idea of following the line is is to pick a target reflection number (for example 50%) and adjust movement to keep it the same. This number needs to be between black and white reflection numbers - so important to keep lighting the same. Also the reflection number adjusts slightly the target position of the sensor. Then movement is done by adjusting the speed with which the wheels turn, adding corrections based on sensor reading. For this, a Spike command from "Extensions -> More Movement" section is needed (you need to enable it first at the bottom left corner). Here is an example of a function which follows black line until distance senrs sees an obstacle within "cm" distance.
+
+![image](https://github.com/ibatuash/wro2023/assets/134078/a95d1319-7aa6-4b3f-803c-05891a23425f)
+
 
 Amount correction changes how fast the number is adjusted. 
 Too large number: large correction angles
