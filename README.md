@@ -2,13 +2,13 @@
 This is an assorted collection of things that we learned by doing a WRO challenge (2023, Elementary) for the first time. 
 
 # Hardware
-## General design
+## Robot design
 - Try to make the design as simple as possible - and practice disassembling / reassembling the robot several times before competition. Small changes or mistakes in the design can break expectations in the program (for example, if position of distance sensor changes).
 - Robot stability: it is better keep the center of gravity low. This adds stability, and helps to reduce random errors on turns or movements
 - Wheel traction: Wheels from the Spike set can slip with high acceleration. WRO teams generally use larger / wider wheels (from other Lego sets) to have more traction. Even with the same surface, traction can depend on the surface below the playing field. When we were testing on the playin field with a soft carpet underneath it, there is more traction versus the same surface, placed on the hard underlying (wooden table). The reason for this, is that on the soft underlying surface, the robot pushes down the map with its own weight - this increases contact area for the wheels and therefor traction.
 
 ## Sensors and motors
-- Light sensors: black-to-white range depends on lighting conditions. In theory, light sensors output numbers from 0% (black) to 100% (white). In practice, this depends on background lighting conditions. With good lighting, black color can be 30% and white is 100%. With dim lighting, black can be 20% and white 50%. This range matters a lot for "follow the line" logic. 
+- Light sensors: In theory, light sensors output numbers from 0% (black) to 100% (white). In practice, this depends on the background lighting conditions: with good lighting, black color can be 30% and white is 100%. With dim lighting, black can be 20% and white 60%. This range matters a lot for "follow the line" logic. 
 - New "Spike" hubs have 6 connection sockets only. Out of these: 
 -- 2 are needed for wheels
 -- 1 or 2 are needed for light sensors (certainly 1 is needed for tracking, and second one is very likely needed for crossroad detection). 
@@ -24,14 +24,14 @@ So older EV3 hubs with 8 sockets have a clear advantage - as they can use more  
 
 # Programming (Spike)
 ## Basic movement
-### Turns
-There are 2 parameters in the turn function: 'direction' (from -100 to +100) and 'distance'. Distance means how much should the 'Main' motor move. 'Main' motor is Left for negative numbers and Right for positive numbers. 
-Distance can be in: 
+### Standard "turn" block
+There are 2 parameters in the Spike turn function: 'direction' (from -100 to +100) and 'distance'. Distance means how much should the 'Main' motor move. 'Main' motor is Left for negative numbers and Right for positive numbers. 
+'Distance' can be set in: 
 - Degrees (useful for small adjustments)
 - Rotations (useful for large movements or when the motor is operating some mechanism)
-- Cm/Inch (converted into degrees based on the wheel size. If non-standard wheels are used, need to set the wheel diameter at the start of the program ). 
+- Cm/Inch (converted into degrees, based on the wheel size. If non-standard wheels are used, it is needed to set the wheel diameter at the start of the program). 
 
-Direction means how much of the total is assigned to each wheel. 
+'Direction' means how much of the total is assigned to each wheel. 
 For example:
 - Direction: +100%, distance: 360 degrees: Only the right motor turns clockwise for 360 degrees, left motor is not moved
 - Direction: +50%, distance: 360 degrees: Right motor turns clockwise 360 degrees, the left motor turns 180% degrees. 
@@ -49,12 +49,12 @@ Too small correction: long 'waves' of correction (unpredictable end position)
 Links: https://ev3lessons.com/en/ProgrammingLessons/advanced/LineFollower.pdf
 
 ## Advanced movement
-### Follow the line (distance) 
+### Following lines (for a predefined distance) 
 Sometimes it is useful to follow the line for a given distance. This can be done by making the 'stop' condition based on the motor position. The idea is: before moving, reset wheel 'position' to 0. If you need to move by 10 cm, you can calculate how much this is in degrees (or rotations), and use the motor "current angle" position as a stopping criteria.
 Video reference: TODO
 
 ### Alignment on the line (reflection difference) 
-If there are 2 reflection sensors in the build, they can be used to align the robot on a line, when coming to it from some angle. The idea is to make the reflection number the same (within some tolerance).
+If there are 2 reflection sensors in the build, they can be used to align the robot on a line, when coming to it from some angle. The idea is to make the reflection number the same (within some tolerance). The exact correction logic depends on the robot design (ie whether sensors are parallel/perpendicular to the wheels, and what is the distance to the wheels)
  
 ### Compass (AKA "yaw" gyroscope parameter) 
 Robot hub also has a built-in direction sensor. It is confusingly called "yaw" - but you can think of it as a compass. The parameter value ranges from -180 to +180.  Zero (reference) position needs to be set when the program starts. Then after make turns, you can use the current compass value to adjust rotation: if the compass value is 88 - make an extra 2 degree turn (this logic can be integrated into a custom function such as "turn left" or "turn right". Compass will accumulate error after multiple turns, so it is useful to 'reset' it during the program when robot position is known: for example, after aligning on the line - or intentionally bumping into the wall) 
@@ -66,24 +66,24 @@ https://www.youtube.com/watch?v=uL9V4OcNs5U
 You would likely need to have basic reusable functions for turns, line following, basic arm actions. Even if an action requires a single Spike block (for example for turning, or raising the arm), it is still useful to make it a custom function: you may want to adjust it later (if you change physical arm design), for example to add some logic (like changing speed or adding corrections).
 
 ### Functions need conventions/expectations for start / end positions 
-Functions generally rely on the robot being in a certain position before being called. For example, 'following line' can assume that robot is indeed on the line already. Or, when executing a function for TaskA, robot ends up in some PositionA. Then next function for TaskB would assumes this PositionA 
+Functions generally rely on the robot being in a certain position before they are called. For example, 'following line' can assume that robot is indeed on the line already. Or, when executing a function for some TaskA, robot ends up in some PositionA. Then the next function for TaskB would need to start from PositionA.
 
 ### Layout of the functions
-- It is helpful to visually organize related functions together. There can be an area for "basic" functions, then left-to-right organized functions (in the order in which they are called).
+- It is helpful to visually organize related functions together. There can be an area for "basic" functions, then left-to-right organized functions (in the approximate order in which they are called).
 - Spike sorts functions by name. So it is useful to have same prefixes for related functions, for example: "move_until_crossroad", "move_by_distance", "taskA_subtaskX", "taskA_subtaskY", etc
 - Reusable vs easy-to-tweak functions: Functions should be composable, and composition of the functions should be easy to adjust. For example, there are 'surprise tasks' announced on the day of the competition: you should be able to change a particular step in some task without rearranging / changing multiple places
-- Avoid copy-pasting functions: if you need to adjust some logic, it is easier to do in one place
+- Avoid copy-pasting functions: if you need to adjust some logic, it is easier to do in one place. If the same value is used in multiple places (for example, speed or arm position), can use a variable to refer to it.
 
 ## Finding issues (debugging)
-Basic steps to fix errors: Reproduce (more than once!), Understand, Fix, Test (more than once!).
+Basic steps to fix errors: **Reproduce** (more than once!), **Understand**, **Fix**, **Test** (more than once!).
 Finding issues can be difficult, especially if they are not always reproducible. It is very important to be effective in investigation of the issues - there will be many!
 
-- Most basic way: Reduce robot speed / insert delays / add "stop all" blocks. If robot gets lost after some specific place, for example, a specific turn: add "sleep" block to see how exactly it stops (what are the sensor readings), in which part of the program, and what are the next blocks. You can use "wait for button press" logic to resume program after you analyzed the error
-- Use screen output to display what robot is doing. Drawing patterns or pixels is fast, however outputting text/variables can add small pauses in the program - this can also change the behavior. 
-- Try to use as small as possible test program to reproduce errors. If a mistake happens after 1 minute of the running program, making 10 attempts to fix wastes 10 minutes.
+- Most basic way: Reduce robot speed / insert Wait (before problematic step) or "Stop all" (after problematic step) blocks. If robot gets lost after some specific place, for example, a specific turn: add "sleep" block to see how exactly it stops (what are the sensor readings), in which part of the program, and what are the next blocks. You can use "wait for button press" logic to resume program after you analyzed the error
+- Use screen output to display what robot is doing. Drawing patterns or pixels is fast, however outputting text/variables can add small pauses in the program - this can also change the behavior (for example if done when moving). 
+- Try to use as small as possible test program to reproduce errors. If a mistake happens after 1 minute of the running program, making 10 attempts to fix costs extra 10 minutes.
 - After fixing problem in isolation, test it with the main program
 
-## Spike/HUB issues / bugs:
+## Spike/HUB issues / bugs
 - Always check battery / connections: with low charge ( < 30%), hub can misbehave (it looks sensor readings can be slower, some commands get stuck/delayed)
 - If Spike App is slow, it is sometimes help to restart spike app (and/or PC itself)
 - We have noticed that using a Bluetooth mouse causes a lot of slow-down and issues when running programs. So better to avoid using Bluetooth for anything else at the same time.
