@@ -96,4 +96,4 @@ Finding issues can be difficult, especially if they are not always reproducible.
 -- If copied functions use any variables (likely they will need to be re-created with a new name in the target project). Also existing variables can stop working (!). 
 -- Program can be "pasted" into a random (?) place - and if you press Ctrl-V 2 times it make a duplcate, and the project gets broken
 -- If the copied functions call other (non-copied) functions - in this case Spike silently fails to start the program - "Play" button does not do anything. (only printing errors in the log file).
-- There is a Spike App log, located at XXXXXXXXXX log file location (Windows). This can reveal further issues.
+- There is a Spike App log, located at C:\Users\USERNAME\AppData\Roaming\SPIKE3\log.txt log file location (Windows). This can reveal further issues.
