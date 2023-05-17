@@ -54,15 +54,18 @@ Links: https://ev3lessons.com/en/ProgrammingLessons/advanced/LineFollower.pdf
 ## Advanced movement
 ### Following lines (for a predefined distance) 
 Sometimes it is useful to follow the line for a given distance. This can be done by making the 'stop' condition based on the motor position. The idea is: before moving, reset wheel 'position' to 0. If you need to move by 10 cm, you can calculate how much this is in degrees (or rotations), and use the motor "current angle" position as a stopping criteria.
-Video reference: TODO
+
+![image](https://github.com/ibatuash/wro2023/assets/134078/6b4937dd-cc07-428d-98ec-6dafca43433d)
+
+Video reference: https://www.youtube.com/watch?v=uJst-xmDEuU
 
 ### Alignment on the line (reflection difference) 
 If there are 2 reflection sensors in the build, they can be used to align the robot on a line, when coming to it from some angle. The idea is to make the reflection number the same (within some tolerance). The exact correction logic depends on the robot design (ie whether sensors are parallel/perpendicular to the wheels, and what is the distance to the wheels)
+
+![image](https://github.com/ibatuash/wro2023/assets/134078/5d8ede48-a9d1-4e5f-9d27-576903803126)
  
 ### Compass (AKA "yaw" gyroscope parameter) 
 Robot hub also has a built-in direction sensor. It is confusingly called "yaw" - but you can think of it as a compass. The parameter value ranges from -180 to +180.  Zero (reference) position needs to be set when the program starts. Then after make turns, you can use the current compass value to adjust rotation: if the compass value is 88 - make an extra 2 degree turn (this logic can be integrated into a custom function such as "turn left" or "turn right". Compass will accumulate error after multiple turns, so it is useful to 'reset' it during the program when robot position is known: for example, after aligning on the line - or intentionally bumping into the wall) 
-https://www.youtube.com/watch?v=YMk6lN55eBQ
-https://www.youtube.com/watch?v=uL9V4OcNs5U
 
 ## Program organization
 ### Basic movement/action functions 
